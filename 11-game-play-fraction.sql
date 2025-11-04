@@ -1050,3 +1050,31 @@ INSERT INTO Player_Activity1 (player_id, device_id, event_date, games_played) VA
 (85, 99, '2019-02-27', 45),
 (78, 34, '2019-01-16', 87),
 (58, 31, '2019-02-25', 52);
+
+WITH CTE AS (
+
+SELECT
+* ,
+FIRST_VALUE(event_date) OVER( PARTITION BY player_id ORDER BY event_date ) first_date
+,LEAD(event_date) OVER( PARTITION BY player_id  ORDER BY event_date) AS sec_date
+  
+ FROM player_activity1 )
+ 
+ 
+ SELECT ROUND( (COUNT(1) / ( SELECT COUNT(DISTINCT player_id ) FROM player_activity1 ) )  ,2 ) FROM CTE
+ WHERE sec_date = DATE_ADD( first_date, INTERVAL 1 DAY );
+ ----------------------------------------------------------
+ 
+ WITH CTE AS (
+SELECT
+* ,
+FIRST_VALUE(event_date) OVER( PARTITION BY player_id ORDER BY event_date ) first_date
+,LEAD(event_date) OVER( PARTITION BY player_id  ORDER BY event_date) AS sec_date
+  
+ FROM player_activity1 )
+ 
+ SELECT 
+ROUND( COUNT( CASE WHEN DATE_ADD( first_date , INTERVAL 1 DAY ) = sec_date THEN 1 ELSE NULL END  )
+ / COUNT( DISTINCT player_id ) ,2 ) AS fraction
+  FROM CTE
+ 
