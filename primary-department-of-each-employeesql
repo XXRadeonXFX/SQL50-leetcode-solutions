@@ -1,0 +1,72 @@
+
+USE leetcode; 
+ DROP TABLE IF EXISTS employee;
+ CREATE TABLE Employee (
+    employee_id INT NOT NULL,
+    department_id INT NOT NULL,
+    primary_flag CHAR(1) CHECK (primary_flag IN ('Y', 'N')),
+    PRIMARY KEY (employee_id, department_id)
+);
+
+
+INSERT INTO Employee (employee_id, department_id, primary_flag) VALUES
+(1, 26, 'N'),
+(2, 19, 'N'),
+(2, 95, 'Y'),
+(2, 41, 'N'),
+(2, 37, 'N'),
+(2, 26, 'N'),
+(2, 3,  'N'),
+(2, 15, 'N'),
+(2, 40, 'N'),
+(2, 43, 'N');
+
+-- Insert records into Employee table
+TRUNCATE TABLE employee;
+-- Insert data into Employee table
+INSERT INTO Employee (employee_id, department_id, primary_flag) VALUES
+(1, 1, 'N'),
+(2, 1, 'Y'),
+(2, 2, 'N'),
+(3, 3, 'N'),
+(4, 2, 'N'),
+(4, 3, 'Y'),
+(4, 4, 'N');
+
+TRUNCATE TABLE employee;
+
+INSERT INTO Employee (employee_id, department_id, primary_flag) VALUES
+(1, 1, 'N'),
+(2, 1, 'Y'),
+(2, 2, 'N'),
+(3, 3, 'N'),
+(4, 2, 'N'),
+(4, 3, 'Y'),
+(4, 4, 'N');
+
+
+
+
+
+SELECT employee_id, department_id FROM employee
+WHERE primary_flag = 'Y'
+AND employee_id IN (
+
+ SELECT employee_id 
+FROM employee
+GROUP BY employee_id
+HAVING COUNT(employee_id ) > 1
+
+
+
+)
+UNION 
+SELECT  employee_id, department_id 
+FROM employee
+WHERE employee_id IN (
+ SELECT employee_id 
+FROM employee
+GROUP BY employee_id
+HAVING COUNT(employee_id ) =1
+ ) AND primary_flag = 'N'
+ ORDER BY 1;
