@@ -1,16 +1,18 @@
+USE leetcode;
 -- DDL (Data Definition Language) - Table Creation
 
--- Create Product table
+DROP TABLE IF EXISTS Product;
 CREATE TABLE Product (
     product_key INT PRIMARY KEY
 );
 
 -- Create Customer table
+DROP TABLE IF EXISTS Customer;
 CREATE TABLE Customer (
     customer_id INT NOT NULL,
-    product_key INT NOT NULL,
-    PRIMARY KEY (customer_id, product_key),
-    FOREIGN KEY (product_key) REFERENCES Product(product_key)
+    product_key INT NOT NULL
+--     PRIMARY KEY (customer_id, product_key),
+--     FOREIGN KEY (product_key) REFERENCES Product(product_key)
 );
 
 -- DML (Data Manipulation Language) - Data Insertion
@@ -222,3 +224,13 @@ INSERT INTO Customer (customer_id, product_key) VALUES
 (28, 12), (48, 11), (42, 13), (43, 15), (24, 12), (36, 2), (41, 19), (5, 2), (11, 15), (17, 13),
 (3, 10), (36, 10), (15, 14), (10, 8), (23, 16), (16, 16), (33, 17), (27, 15), (1, 10), (46, 13),
 (36, 13), (39, 8), (49, 3), (43, 16), (6, 7), (6, 3), (2, 14), (47, 14), (1, 13), (21, 16);
+
+
+SELECT customer_id 
+FROM customer 
+WHERE product_key IN ( SELECT product_key FROM product )
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_key) = ( SELECT COUNT( DISTINCT product_key ) FROM product )
+;
+
+SELECT COUNT( DISTINCT product_key ) FROM product;
