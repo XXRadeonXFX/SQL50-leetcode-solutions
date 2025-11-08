@@ -1,0 +1,38 @@
+USE leetcode;
+WITH Logs AS (
+    SELECT 11 AS id, 1 AS num UNION ALL
+    SELECT 12, 1 UNION ALL
+    SELECT 13, 1 UNION ALL
+    SELECT 14, 2 UNION ALL
+    SELECT 15, 1 UNION ALL
+    SELECT 16, 2
+)
+
+SELECT num FROM (
+SELECT *,
+ROW_NUMBER() OVER( PARTITION BY RN,num order by num ) AS RX
+ FROM (
+SELECT * 
+,id - ROW_NUMBER() OVER( PARTITION BY num ORDER BY id )   AS RN
+ FROM Logs
+) AS t
+) AS k WHERE RX >= 3
+;
+-----------------------
+;
+WITH Logs AS (
+    SELECT 1 AS id, 3 AS num UNION ALL
+    SELECT 2, 3 UNION ALL
+    SELECT 3, 3 UNION ALL
+    SELECT 4, 3     
+)
+
+SELECT DISTINCT num FROM (
+
+SELECT * , ROW_NUMBER() OVER( PARTITION BY RN,num ORDER BY id  ) AS RX
+FROM ( 
+SELECT * 
+ ,id - ROW_NUMBER() OVER( PARTITION BY num ORDER BY id )   AS RN
+ FROM Logs
+ORDER BY 1 ) AS t
+) AS k WHERE RX >= 3;
