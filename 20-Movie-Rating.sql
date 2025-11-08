@@ -1,3 +1,50 @@
+USE leetcode;
+CREATE TABLE Movies (
+    movie_id INT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE MovieRating (
+    movie_id INT,
+    user_id INT,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    created_at DATE
+--     PRIMARY KEY (movie_id, user_id),
+--     FOREIGN KEY (movie_id) REFERENCES Movies(movie_id),
+--     FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+
+-- Movies table
+INSERT INTO Movies (movie_id, title) VALUES
+(1, 'Avengers'),
+(2, 'Frozen 2'),
+(3, 'Joker');
+
+-- Users table
+INSERT INTO Users (user_id, name) VALUES
+(1, 'Daniel'),
+(2, 'Monica'),
+(3, 'Maria'),
+(4, 'James');
+
+-- MovieRating table
+INSERT INTO MovieRating (movie_id, user_id, rating, created_at) VALUES
+(1, 1, 3, '2020-01-12'),
+(1, 2, 4, '2020-02-11'),
+(1, 3, 2, '2020-02-12'),
+(1, 4, 1, '2020-01-01'),
+(2, 1, 5, '2020-02-17'),
+(2, 2, 2, '2020-02-01'),
+(2, 3, 2, '2020-03-01'),
+(3, 1, 3, '2020-02-22'),
+(3, 2, 4, '2020-02-25');
+
 WITH CTE1 AS (
 SELECT title, AVG(rating) rt
  FROM movierating A , movies B
@@ -23,4 +70,6 @@ SELECT DISTINCT title AS results FROM(
 SELECT *, ROW_NUMBER() OVER(ORDER BY title) AS RN FROM CTE1
 WHERE rt = (SELECT MAX(rt) FROM CTE1  )
 ) AS t
-WHERE rn =1
+WHERE rn =1;
+
+
