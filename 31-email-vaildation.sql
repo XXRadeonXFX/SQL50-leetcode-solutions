@@ -38,13 +38,13 @@ INSERT INTO Users (user_id, name, mail) VALUES
 
 
 
---Leetcode
+-- Leetcode
 SELECT *
 FROM Users
 WHERE mail COLLATE utf8mb3_bin REGEXP '^[a-zA-Z][a-zA-Z0-9._-]*@leetcode[.]com$';
 
 
---Mysql
+-- Mysql
 SELECT *
 FROM Users
 WHERE mail COLLATE utf8mb4_bin REGEXP '^[a-zA-Z][a-zA-Z0-9._-]*@leetcode[.]com$';
