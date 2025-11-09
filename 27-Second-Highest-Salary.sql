@@ -24,7 +24,7 @@ SELECT * , DENSE_RANK() OVER( ORDER BY salary DESC ) AS RN
  FROM CTE3;
  
  
- 
+ ------------------------------------------------
  WITH Employee AS (
     SELECT 1 AS id, 100 AS salary
 )
@@ -45,3 +45,10 @@ SELECT * , DENSE_RANK() OVER( ORDER BY salary DESC ) AS RN
  WHERE RN <> 2;
  
 
+------------------------------------------------
+ WITH Employee AS (
+    SELECT 1 AS id, 100 AS salary
+)
+
+SELECT max(salary) AS SecondHighestSalary FROM employee 
+WHERE salary NOT IN ( SELECT MAX(salary) FROM employee );
