@@ -69,3 +69,19 @@ AND A.subject_name = B.subject_name
 ) AS t
 GROUP BY 1,2,3
 ORDER BY 1,3;
+
+
+
+# Solution 2 :
+WITH CTE AS (SELECT * FROM students A , Subjects B )
+SELECT DISTINCT
+A.student_id ,
+A.student_name,
+A.subject_name,
+COUNT(B.student_id) AS attended_exams
+FROM CTE A LEFT JOIN  Examinations B
+ON A.student_id = B.student_id
+AND A.subject_name = B.subject_name
+GROUP BY 1,2,3
+ORDER BY 1,2,3,4 DESC
+
