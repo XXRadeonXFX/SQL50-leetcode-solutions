@@ -62,7 +62,7 @@ INSERT INTO Prices1 (product_id, start_date, end_date, price) VALUES
 
 
 
-
+# Solution 1:
 SELECT
 B.product_id , COALESCE(ROUND(SUM( COALESCE(units,0) * B.price)/ SUM( COALESCE(units,0) ), 2 ),0) AS average_price
 FROM unitssold1 A RIGHT JOIN prices1 B
@@ -70,3 +70,23 @@ ON A.product_id = B.product_id
 AND A.purchase_date BETWEEN B.start_date AND B.end_date
 GROUP BY B.product_id;
 
+
+
+
+# Solution 2:
+WITH CTE AS (
+SELECT 
+A.product_id
+, COALESCE(B.units,0) * A.price AS mul 
+, B.units AS units
+FROM prices A LEFT JOIN unitssold B
+ON A.product_id = B.product_id
+AND B.purchase_date BETWEEN A.start_date AND A.end_date
+) 
+
+
+SELECT 
+product_id,
+COALESCE(ROUND( SUM(mul) / SUM(units) , 2 ),0 ) AS average_price 
+FROM CTE 
+GROUP BY 1;
