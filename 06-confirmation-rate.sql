@@ -31,6 +31,7 @@ INSERT INTO Confirmations (user_id, time_stamp, action) VALUES
 (2, '2021-01-22 00:00:00', 'confirmed'),
 (2, '2021-02-28 23:59:59', 'timeout');
 
+# Solution 1:
 WITH CTE AS (
 SELECT 
 A.user_id , CASE WHEN B.action is NULL OR B.action = 'timeout' THEN 0 
@@ -42,3 +43,15 @@ ON A.user_id = B.user_id
 SELECT user_id , ROUND(SUM(action1) / COUNT(action1),2 ) AS confirmation_rate 
  FROM CTE 
  GROUP BY 1;
+
+
+
+# Solution 2:
+SELECT 
+A.user_id , ROUND( AVG(CASE WHEN action = 'timeout' THEN 0 
+                   WHEN action = 'confirmed' THEN 1 
+                   WHEN action IS NULL THEN 0 END ) ,2 ) AS confirmation_rate 
+
+FROM signups A LEFT JOIN confirmations B
+ON A.user_id  = B.user_id 
+GROUP BY 1;
