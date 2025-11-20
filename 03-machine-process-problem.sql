@@ -104,15 +104,14 @@ VALUES
     (2, 1, 'end', 5.000);
     
 WITH CTE AS (
-SELECT 
-* , LEAD(timestamp) OVER( PARTITION BY machine_id , process_id  ORDER BY timestamp ) AS RN
-FROM Activity1 ORDER BY machine_id, process_id, timestamp 
-)    
+SELECT *, CASE WHEN activity_type = 'start' THEN timestamp * -1 ELSE timestamp END AS new_ts 
+FROM activity ) , 
+	CTE2 AS (
+SELECT machine_id , process_id , SUM(new_ts) sm
+FROM CTE 
+GROUP BY 1,2 ) 
 
-SELECT machine_id, ROUND(SUM(val)/ COUNT(machine_id) ,3) AS processing_time   
-FROM (
-SELECT * , RN- timestamp AS val 
- FROM CTE
-WHERE RN is not NULL ) AS t
-GROUP BY machine_id;        
+SELECT machine_id, ROUND(SUM(sm)/COUNT(sm) ,3) AS processing_time
+FROM CTE2 
+GROUP BY machine_id;    
     
