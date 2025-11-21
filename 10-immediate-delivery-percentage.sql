@@ -97,7 +97,7 @@ INSERT INTO delivery1 (delivery_id, customer_id, order_date, customer_pref_deliv
 
 ---------------------------------------------------------------
 
-
+--# SOLUTIION 1:
 SELECT
 ROUND(COUNT(DiSTINCT customer_id) / ( SELECT COUNT(DiSTINCT customer_id) FROM delivery1  ) *100,2) AS immediate_percentage 
  FROM (
@@ -109,7 +109,7 @@ WHERE RN = 1
 AND DATEDIFF(order_date,customer_pref_delivery_date) = 0;
 
 
-
+-- # SOLUTION 1:
 WITH CTE AS (
 SELECT 
 customer_id , 
@@ -127,3 +127,23 @@ SELECT
 ROUND( ( SUM(val)/COUNT(val) ) * 100 ,2) AS immediate_percentage 
 FROM CTE
 ;
+
+
+-- # SOLUTION: 2
+# Write your MySQL query statement below
+WITH CTE AS (
+
+SELECT 
+customer_id 
+, MIN(order_date) AS order_date 
+,MIN(customer_pref_delivery_date) AS customer_pref_delivery_date
+
+FROM delivery
+GROUP BY 1
+)
+
+
+SELECT 
+ROUND(( SUM( CASE WHEN DATEDIFF( customer_pref_delivery_date , order_date) = 0 THEN 1 ELSE 0 END ) 
+/ COUNT(*)  ) * 100 ,2) AS immediate_percentage
+FROM CTE 
