@@ -94,7 +94,7 @@ INSERT INTO Register1 (contest_id, user_id) VALUES
 
 
 
-
+# Solution 1:
 WITH CTE AS (
 SELECT 
 B.contest_id , COUNT(B.contest_id) AS cnt
@@ -110,6 +110,8 @@ ORDER BY percentage DESC , 1 ASC
 ;
 
 
+
+# Solution 2:
 SELECT rg.contest_id  ,    ROUND( ( COUNT(1) / (
           SELECT COUNT(1) FROM users
 )  ) * 100 , 2 ) AS percentage    
@@ -118,6 +120,3 @@ WHERE us.user_id = rg.user_id
 GROUP BY 1 
 ORDER BY  2 DESC ,1;
 
-SELECT * FROM 
--- Register1;
-,user1;
