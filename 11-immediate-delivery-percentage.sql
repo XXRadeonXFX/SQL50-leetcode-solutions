@@ -147,3 +147,14 @@ SELECT
 ROUND(( SUM( CASE WHEN DATEDIFF( customer_pref_delivery_date , order_date) = 0 THEN 1 ELSE 0 END ) 
 / COUNT(*)  ) * 100 ,2) AS immediate_percentage
 FROM CTE 
+
+
+--# SOLUTION 3 :
+# Write your MySQL query statement below
+select round(avg(order_date = customer_pref_delivery_date) * 100, 2) immediate_percentage
+from delivery
+where (customer_id, order_date) in (
+    select customer_id, min(order_date)
+    from delivery
+    group by customer_id
+);
